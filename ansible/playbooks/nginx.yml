@@ -1,0 +1,13 @@
+---
+- hosts: vagrant 
+  sudo: yes
+
+  vars_files:
+  - vars.yml
+
+  tasks:
+    - name: Install nginx
+      yum: name=nginx state=present 
+
+    - name: Enable nginx
+      service: name=nginx state=started enabled=yes

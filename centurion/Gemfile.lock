@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    centurion (1.8.3)
+      excon (~> 0.33)
+      logger-colors
+      trollop
+    excon (0.45.4)
+    logger-colors (1.0.0)
+    trollop (2.1.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  centurion
+
+BUNDLED WITH
+   1.10.6

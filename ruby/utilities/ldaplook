@@ -1,0 +1,84 @@
+#!/usr/bin/ruby
+
+require 'net/ldap'
+require 'colorize'
+
+# Variables
+environment = ARGV[0]
+option = ARGV[1]
+item = ARGV[2]
+
+# Print Usage
+def usage()
+  puts "Usage: ldaplook <test|prod> <user|group|name> <username|name>"
+end
+
+# Set Environment specific variables
+case environment
+when "test"
+  server = ""
+  base = ""
+when "prod"
+  server = ""
+  base = ""
+else
+  usage()
+  abort("Error: Missing Environment")
+end
+
+# LDAP Server Port
+port = 389
+
+# Set Filter for Group or User
+case option
+when "user"
+  filter = Net::LDAP::Filter.eq( "uid", "#{item}*")
+when "group"
+  filter = Net::LDAP::Filter.eq( "uniqueMember", "uid=#{item}*")
+when "name"
+  filter = Net::LDAP::Filter.eq( "cn", "#{item}*")
+else
+  usage()
+  abort("Error: Missing Option")
+end
+
+# Run LDAP Search, return results
+if item.to_s != ""
+  ldap = Net::LDAP.new :host => server, :port => port
+
+  # Get Start Time
+  startTime = Time.now
+
+  # Query LDAP and output results
+  ldap.search( :base => base, :filter => filter ) do |entry|
+    if option == "user" || option == "name"
+      entry.each do |attribute, values|
+        values.each do |value|
+          if attribute.to_s != "jpegphoto"
+            puts "#{attribute}".blue + ": " + "#{value}".green
+          end
+        end 
+      end 
+    elsif option == "group"
+      entry[:dn].each do |entry|
+        puts "#{entry}".green
+      end
+    end
+  end
+
+  # Get End Time
+  endTime = Time.now
+  queryTime = endTime - startTime
+
+  # Output Query Response Time
+  if queryTime <= 1.5
+    puts "\nQuery Response Time: #{queryTime}".green
+  else
+    puts "\nQuery Response Time: #{queryTime}".red
+  end
+else
+  usage()
+  abort("Error: Missing Item")
+end
+
+

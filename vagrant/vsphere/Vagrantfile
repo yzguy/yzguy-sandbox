@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure('2') do |config|
+    config.vm.box = "dummy"
+
+    config.vm.provider :vsphere do |vpshere|
+        vsphere.host = ""
+        vsphere.insecure = "true"
+        vsphere.compute_resource_name = ""
+        vsphere.resource_pool_name = ""
+        vsphere.template_name = ""
+        vpshere.name = "vagrantvm"
+        vsphere.user = "root"
+        vsphere.password = ""
+    end
+end

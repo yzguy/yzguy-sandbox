@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/centos-7.1"
+  config.vm.hostname = 'ansy.yzguy.local'
+  config.vm.network 'private_network', ip: '172.16.30.10'
+
+  config.vm.provider :virtualbox do |vbox|
+    vbox.customize [
+        'modifyvm', :id,
+        '--name', 'ansy',
+        '--memory', '1024'
+    ]
+  end
+end
