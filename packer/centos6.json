@@ -1,0 +1,39 @@
+{
+    "variables": {
+        "ssh_username": "root",
+        "ssh_password": "password"
+    },
+    "builders": [{
+        "type": "virtualbox-iso",
+            "boot_command": [
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos6.ks<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 40520,
+            "http_directory": "http",
+            "iso_checksum": "eb3c8be6ab668e6d83a118323a789e6c",
+            "iso_checksum_type": "md5",
+            "iso_url": "/Users/yzguy/iSOs/CentOS-6.6-x86_64-minimal.iso",
+            "guest_os_type": "RedHat_64",
+            "ssh_username": "{{ user `ssh_username`}}",
+            "ssh_password": "{{ user `ssh_password`}}",
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "poweroff"
+        },{
+        "type": "vmware-iso",
+            "boot_command": [
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos6.ks<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 40520,
+            "http_directory": "http",
+            "iso_checksum": "eb3c8be6ab668e6d83a118323a789e6c",
+            "iso_checksum_type": "md5",
+            "iso_url": "/Users/yzguy/iSOs/CentOS-6.6-x86_64-minimal.iso",
+            "ssh_username": "{{ user `ssh_username`}}",
+            "ssh_password": "{{ user `ssh_password`}}",
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "poweroff",
+            "tools_upload_flavor": "linux"
+    }]
+}
