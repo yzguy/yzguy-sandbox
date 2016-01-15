@@ -1,0 +1,30 @@
+- hosts: vagrant
+
+  handlers:
+    - name: restart bind9
+      service: name=bind9 state=restarted
+
+  tasks:
+    - name: Install Bind DNS server
+      apt: name=bind9 state=present
+
+    - name: Setup named.conf.local file
+      template: src=templates/master/named.conf.local.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=0644
+
+    - name: Setup named.conf.options file
+      template: src=templates/master/named.conf.options.j2 dest=/etc/bind/named.conf.options owner=root group=bind mode=0644
+    
+    - name: Install git package
+      apt: name=git state=present
+
+    - name: Clone zone files from git
+      git: repo=git@bitbucket.org:yzguy/yzguy-io-zones.git dest=/var/lib/bind/zones accept_hostkey=true
+      
+    - name: Set owner on zone files
+      file: path=/var/lib/bind/zones recurse=yes owner=bind group=bind
+
+    - name: Ensure bind9 is running
+      service: name=bind9 state=started enabled=yes
+
+    - name: Create vanity folder
+      file: src=/var/lib/bind/zones dest=/root/yzguy.io state=link

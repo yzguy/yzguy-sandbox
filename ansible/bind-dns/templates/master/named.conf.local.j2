@@ -1,0 +1,24 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+key "rndc-key" {
+    algorithm hmac-md5;
+    secret "piMKZzTx20Qk+knPZxlkxA==";
+};
+
+zone "yzguy.io" IN {
+    type master;
+    file "/var/lib/bind/zones/yzguy.io";
+    allow-transfer { 10.235.5.3; };
+};
+
+zone "5.235.10.in-addr.arpa" IN {
+    type master;
+    file "/var/lib/bind/zones/5.235.10.in-addr.arpa";
+    allow-transfer { 10.235.5.3; };
+};
