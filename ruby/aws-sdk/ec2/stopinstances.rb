@@ -28,11 +28,13 @@ resp.instance_statuses.each do |instance_status|
   end
 end
 
+# If there are running instances stop them
 unless running_instances.empty?
   stopped_instances = ec2.stop_instances({
       instance_ids: running_instances,
   })
 
+	# Print each stopped instance id or that none have been stopped
   stopped_instances.stopping_instances.each do |stopped_instance|
     puts "Instance #{stopped_instance.instance_id} has been stopped"
   end
