@@ -22,18 +22,18 @@ running_instances = []
 
 # Loop through array of instances
 resp.instance_statuses.each do |instance_status|
-  # Add instance id to list if it's not in the skip list and it's running 
-	unless instances_to_skip.include?(instance_status.instance_id)
-		if instance_status.instance_state.name == "running"
-			running_instances.push(instance_status.instance_id)
-		end
-	end
+  # Add instance id to list if it's not in the skip list and it's running
+  unless instances_to_skip.include?(instance_status.instance_id)
+    if instance_status.instance_state.name == "running"
+      running_instances.push(instance_status.instance_id)
+    end
+  end
 end
 
 # If there are running instances stop them
 unless running_instances.empty?
   stopped_instances = ec2.stop_instances({
-      instance_ids: running_instances,
+    instance_ids: running_instances,
   })
 
   # Print each stopped instance id or that none have been stopped
