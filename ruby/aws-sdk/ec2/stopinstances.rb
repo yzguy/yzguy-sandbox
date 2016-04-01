@@ -34,7 +34,7 @@ unless running_instances.empty?
       instance_ids: running_instances,
   })
 
-	# Print each stopped instance id or that none have been stopped
+  # Print each stopped instance id or that none have been stopped
   stopped_instances.stopping_instances.each do |stopped_instance|
     puts "Instance #{stopped_instance.instance_id} has been stopped"
   end
