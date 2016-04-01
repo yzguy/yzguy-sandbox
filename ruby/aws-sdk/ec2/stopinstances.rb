@@ -22,10 +22,12 @@ running_instances = []
 
 # Loop through array of instances
 resp.instance_statuses.each do |instance_status|
-  # Add instance id to list if it's running and not in the skip list
-  if instance_status.instance_state.name == "running" && !instances_to_skip.include?(instance_status.instance_id)
-    running_instances.push(instance_status.instance_id)
-  end
+  # Add instance id to list if it's not in the skip list and it's running 
+	unless instances_to_skip.include?(instance_status.instance_id)
+		if instance_status.instance_state.name == "running"
+			running_instances.push(instance_status.instance_id)
+		end
+	end
 end
 
 # If there are running instances stop them
@@ -38,7 +40,7 @@ unless running_instances.empty?
   stopped_instances.stopping_instances.each do |stopped_instance|
     puts "Instance #{stopped_instance.instance_id} has been stopped"
   end
-  puts "#{stopped_instances.stopping_instances.count} instance(s) have been stopped"
+  puts "#{stopped_instances.stopping_instances.count} instance(s) have been stopped, #{instances_to_skip.count} instance(s) have been skipped"
 else
-  puts "0 instance(s) have been stopped, #{instances_to_skip.count} has been skipped"
+  puts "0 instance(s) have been stopped, #{instances_to_skip.count} instance(s) have been skipped"
 end
