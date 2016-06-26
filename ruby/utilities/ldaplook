@@ -9,21 +9,21 @@ option = ARGV[1]
 item = ARGV[2]
 
 # Print Usage
-def usage()
-  puts "Usage: ldaplook <test|prod> <user|group|name> <username|name>"
+def usage
+  puts 'Usage: ldaplook <test|prod> <user|group|name> <username|name>'
 end
 
 # Set Environment specific variables
 case environment
-when "test"
-  server = ""
-  base = ""
-when "prod"
-  server = ""
-  base = ""
+when 'test'
+  server = ''
+  base = ''
+when 'prod'
+  server = ''
+  base = ''
 else
-  usage()
-  abort("Error: Missing Environment")
+  usage
+  abort('Error: Missing Environment')
 end
 
 # LDAP Server Port
@@ -31,54 +31,52 @@ port = 389
 
 # Set Filter for Group or User
 case option
-when "user"
-  filter = Net::LDAP::Filter.eq( "uid", "#{item}*")
-when "group"
-  filter = Net::LDAP::Filter.eq( "uniqueMember", "uid=#{item}*")
-when "name"
-  filter = Net::LDAP::Filter.eq( "cn", "#{item}*")
+when 'user'
+  filter = Net::LDAP::Filter.eq('uid', "#{item}*")
+when 'group'
+  filter = Net::LDAP::Filter.eq('uniqueMember', "uid=#{item}*")
+when 'name'
+  filter = Net::LDAP::Filter.eq('cn', "#{item}*")
 else
-  usage()
-  abort("Error: Missing Option")
+  usage
+  abort('Error: Missing Option')
 end
 
 # Run LDAP Search, return results
-if item.to_s != ""
-  ldap = Net::LDAP.new :host => server, :port => port
+if item.to_s != ''
+  ldap = Net::LDAP.new host: server, port: port
 
   # Get Start Time
-  startTime = Time.now
+  start_time = Time.now
 
   # Query LDAP and output results
-  ldap.search( :base => base, :filter => filter ) do |entry|
-    if option == "user" || option == "name"
+  ldap.search(base: base, filter: filter) do |entry|
+    if option == 'user' || option == 'name'
       entry.each do |attribute, values|
         values.each do |value|
-          if attribute.to_s != "jpegphoto"
-            puts "#{attribute}".blue + ": " + "#{value}".green
+          if attribute.to_s != 'jpegphoto'
+            puts attribute.to_s.blue + ': ' + value.to_s.green
           end
-        end 
-      end 
-    elsif option == "group"
-      entry[:dn].each do |entry|
-        puts "#{entry}".green
+        end
+      end
+    elsif option == 'group'
+      entry[:dn].each do |dn|
+        puts dn.to_s.green
       end
     end
   end
 
   # Get End Time
-  endTime = Time.now
-  queryTime = endTime - startTime
+  end_time = Time.now
+  query_time = end_time - start_time
 
   # Output Query Response Time
-  if queryTime <= 1.5
-    puts "\nQuery Response Time: #{queryTime}".green
+  if query_time <= 1.5
+    puts "\nQuery Response Time: #{query_time}".green
   else
-    puts "\nQuery Response Time: #{queryTime}".red
+    puts "\nQuery Response Time: #{query_time}".red
   end
 else
-  usage()
-  abort("Error: Missing Item")
+  usage
+  abort('Error: Missing Item')
 end
-
-
